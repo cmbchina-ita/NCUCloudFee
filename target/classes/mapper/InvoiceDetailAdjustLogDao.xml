@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ies.ncu.edu.cn.dao.InvoiceDetailAdjustLogDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="ies.ncu.edu.cn.entity.InvoiceDetailAdjustLogEntity" id="invoiceDetailAdjustLogMap">
+        <result property="adjustLogId" column="adjust_log_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="accountId" column="account_id"/>
+        <result property="bucketName" column="bucket_name"/>
+        <result property="payerAccountId" column="payer_account_id"/>
+        <result property="invoiceMonth" column="invoice_month"/>
+        <result property="adjustResourceId" column="adjust_resource_id"/>
+        <result property="adjustResourceType" column="adjust_resource_type"/>
+        <result property="adjustStartTime" column="adjust_start_time"/>
+        <result property="adjustEndTime" column="adjust_end_time"/>
+        <result property="adjustTag" column="adjust_tag"/>
+        <result property="adjustResvered" column="adjust_resvered"/>
+        <result property="adjustExchangeId" column="adjust_exchange_id"/>
+        <result property="adjustMoney" column="adjust_money"/>
+        <result property="adjustTime" column="adjust_time"/>
+        <result property="adjustResultId" column="adjust_result_id"/>
+        <result property="adjustRemark" column="adjust_remark"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="ies.ncu.edu.cn.entity.InvoiceDetailAdjustLogEntity">
+		select * from ctd_invoice_detail_adjust_log where adjust_log_id = #{value}
+	</select>
+
+	<select id="queryList" resultType="ies.ncu.edu.cn.entity.InvoiceDetailAdjustLogEntity">
+		select * from ctd_invoice_detail_adjust_log
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by adjust_log_id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from ctd_invoice_detail_adjust_log 
+	</select>
+	 
+	<insert id="save" parameterType="ies.ncu.edu.cn.entity.InvoiceDetailAdjustLogEntity">
+		insert into ctd_invoice_detail_adjust_log
+		(
+			`adjust_log_id`, 
+			`user_id`, 
+			`account_id`, 
+			`bucket_name`, 
+			`payer_account_id`, 
+			`invoice_month`, 
+			`adjust_resource_id`, 
+			`adjust_resource_type`, 
+			`adjust_start_time`, 
+			`adjust_end_time`, 
+			`adjust_tag`, 
+			`adjust_resvered`, 
+			`adjust_exchange_id`, 
+			`adjust_money`, 
+			`adjust_time`, 
+			`adjust_result_id`, 
+			`adjust_remark`
+		)
+		values
+		(
+			#{adjustLogId}, 
+			#{userId}, 
+			#{accountId}, 
+			#{bucketName}, 
+			#{payerAccountId}, 
+			#{invoiceMonth}, 
+			#{adjustResourceId}, 
+			#{adjustResourceType}, 
+			#{adjustStartTime}, 
+			#{adjustEndTime}, 
+			#{adjustTag}, 
+			#{adjustResvered}, 
+			#{adjustExchangeId}, 
+			#{adjustMoney}, 
+			#{adjustTime}, 
+			#{adjustResultId}, 
+			#{adjustRemark}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="ies.ncu.edu.cn.entity.InvoiceDetailAdjustLogEntity">
+		update ctd_invoice_detail_adjust_log 
+		<set>
+			<if test="userId != null">`user_id` = #{userId}, </if>
+			<if test="accountId != null">`account_id` = #{accountId}, </if>
+			<if test="bucketName != null">`bucket_name` = #{bucketName}, </if>
+			<if test="payerAccountId != null">`payer_account_id` = #{payerAccountId}, </if>
+			<if test="invoiceMonth != null">`invoice_month` = #{invoiceMonth}, </if>
+			<if test="adjustResourceId != null">`adjust_resource_id` = #{adjustResourceId}, </if>
+			<if test="adjustResourceType != null">`adjust_resource_type` = #{adjustResourceType}, </if>
+			<if test="adjustStartTime != null">`adjust_start_time` = #{adjustStartTime}, </if>
+			<if test="adjustEndTime != null">`adjust_end_time` = #{adjustEndTime}, </if>
+			<if test="adjustTag != null">`adjust_tag` = #{adjustTag}, </if>
+			<if test="adjustResvered != null">`adjust_resvered` = #{adjustResvered}, </if>
+			<if test="adjustExchangeId != null">`adjust_exchange_id` = #{adjustExchangeId}, </if>
+			<if test="adjustMoney != null">`adjust_money` = #{adjustMoney}, </if>
+			<if test="adjustTime != null">`adjust_time` = #{adjustTime}, </if>
+			<if test="adjustResultId != null">`adjust_result_id` = #{adjustResultId}, </if>
+			<if test="adjustRemark != null">`adjust_remark` = #{adjustRemark}</if>
+		</set>
+		where adjust_log_id = #{adjustLogId}
+	</update>
+	
+	<delete id="delete">
+		delete from ctd_invoice_detail_adjust_log where adjust_log_id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from ctd_invoice_detail_adjust_log where adjust_log_id in 
+		<foreach item="adjustLogId" collection="array" open="(" separator="," close=")">
+			#{adjustLogId}
+		</foreach>
+	</delete>
+
+</mapper>

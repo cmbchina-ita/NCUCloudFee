@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ies.ncu.edu.cn.dao.InvoiceDetailDescDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="ies.ncu.edu.cn.entity.InvoiceDetailDescEntity" id="invoiceDetailDescMap">
+        <result property="id" column="id"/>
+        <result property="payerAccountId" column="payer_account_id"/>
+        <result property="month" column="month"/>
+        <result property="syncTime" column="sync_time"/>
+        <result property="tagTitle" column="tag_title"/>
+        <result property="tagColumn" column="tag_column"/>
+        <result property="billTime" column="bill_time"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="ies.ncu.edu.cn.entity.InvoiceDetailDescEntity">
+		select * from ctd_invoice_detail_desc where id = #{value}
+	</select>
+
+	<select id="queryList" resultType="ies.ncu.edu.cn.entity.InvoiceDetailDescEntity">
+		select * from ctd_invoice_detail_desc
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from ctd_invoice_detail_desc 
+	</select>
+	 
+	<insert id="save" parameterType="ies.ncu.edu.cn.entity.InvoiceDetailDescEntity">
+		insert into ctd_invoice_detail_desc
+		(
+			`id`, 
+			`payer_account_id`, 
+			`month`, 
+			`sync_time`, 
+			`tag_title`, 
+			`tag_column`, 
+			`bill_time`
+		)
+		values
+		(
+			#{id}, 
+			#{payerAccountId}, 
+			#{month}, 
+			#{syncTime}, 
+			#{tagTitle}, 
+			#{tagColumn}, 
+			#{billTime}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="ies.ncu.edu.cn.entity.InvoiceDetailDescEntity">
+		update ctd_invoice_detail_desc 
+		<set>
+			<if test="payerAccountId != null">`payer_account_id` = #{payerAccountId}, </if>
+			<if test="month != null">`month` = #{month}, </if>
+			<if test="syncTime != null">`sync_time` = #{syncTime}, </if>
+			<if test="tagTitle != null">`tag_title` = #{tagTitle}, </if>
+			<if test="tagColumn != null">`tag_column` = #{tagColumn}, </if>
+			<if test="billTime != null">`bill_time` = #{billTime}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from ctd_invoice_detail_desc where id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from ctd_invoice_detail_desc where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

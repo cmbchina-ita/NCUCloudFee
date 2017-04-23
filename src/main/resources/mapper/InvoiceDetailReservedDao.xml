@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ies.ncu.edu.cn.dao.InvoiceDetailReservedDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="ies.ncu.edu.cn.entity.InvoiceDetailReservedEntity" id="invoiceDetailReservedMap">
+        <result property="reservedDescId" column="reserved_desc_id"/>
+        <result property="payerAccountId" column="payer_account_id"/>
+        <result property="invoiceMonth" column="invoice_month"/>
+        <result property="reservedInstanceId" column="reserved_instance_id"/>
+        <result property="productType" column="product_type"/>
+        <result property="instanceRegion" column="instance_region"/>
+        <result property="availabilityZone" column="availability_zone"/>
+        <result property="instanceType" column="instance_type"/>
+        <result property="plantformType" column="plantform_type"/>
+        <result property="startTime" column="start_time"/>
+        <result property="durationYear" column="duration_year"/>
+        <result property="offeringPrice" column="offering_price"/>
+        <result property="rechargePrice" column="recharge_price"/>
+        <result property="offeringType" column="offering_type"/>
+        <result property="instanceCount" column="instance_count"/>
+        <result property="endTime" column="end_time"/>
+        <result property="isMutizone" column="is_mutizone"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="ies.ncu.edu.cn.entity.InvoiceDetailReservedEntity">
+		select * from ctd_invoice_detail_reserved where reserved_desc_id = #{value}
+	</select>
+
+	<select id="queryList" resultType="ies.ncu.edu.cn.entity.InvoiceDetailReservedEntity">
+		select * from ctd_invoice_detail_reserved
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by reserved_desc_id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from ctd_invoice_detail_reserved 
+	</select>
+	 
+	<insert id="save" parameterType="ies.ncu.edu.cn.entity.InvoiceDetailReservedEntity">
+		insert into ctd_invoice_detail_reserved
+		(
+			`reserved_desc_id`, 
+			`payer_account_id`, 
+			`invoice_month`, 
+			`reserved_instance_id`, 
+			`product_type`, 
+			`instance_region`, 
+			`availability_zone`, 
+			`instance_type`, 
+			`plantform_type`, 
+			`start_time`, 
+			`duration_year`, 
+			`offering_price`, 
+			`recharge_price`, 
+			`offering_type`, 
+			`instance_count`, 
+			`end_time`, 
+			`is_mutizone`
+		)
+		values
+		(
+			#{reservedDescId}, 
+			#{payerAccountId}, 
+			#{invoiceMonth}, 
+			#{reservedInstanceId}, 
+			#{productType}, 
+			#{instanceRegion}, 
+			#{availabilityZone}, 
+			#{instanceType}, 
+			#{plantformType}, 
+			#{startTime}, 
+			#{durationYear}, 
+			#{offeringPrice}, 
+			#{rechargePrice}, 
+			#{offeringType}, 
+			#{instanceCount}, 
+			#{endTime}, 
+			#{isMutizone}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="ies.ncu.edu.cn.entity.InvoiceDetailReservedEntity">
+		update ctd_invoice_detail_reserved 
+		<set>
+			<if test="payerAccountId != null">`payer_account_id` = #{payerAccountId}, </if>
+			<if test="invoiceMonth != null">`invoice_month` = #{invoiceMonth}, </if>
+			<if test="reservedInstanceId != null">`reserved_instance_id` = #{reservedInstanceId}, </if>
+			<if test="productType != null">`product_type` = #{productType}, </if>
+			<if test="instanceRegion != null">`instance_region` = #{instanceRegion}, </if>
+			<if test="availabilityZone != null">`availability_zone` = #{availabilityZone}, </if>
+			<if test="instanceType != null">`instance_type` = #{instanceType}, </if>
+			<if test="plantformType != null">`plantform_type` = #{plantformType}, </if>
+			<if test="startTime != null">`start_time` = #{startTime}, </if>
+			<if test="durationYear != null">`duration_year` = #{durationYear}, </if>
+			<if test="offeringPrice != null">`offering_price` = #{offeringPrice}, </if>
+			<if test="rechargePrice != null">`recharge_price` = #{rechargePrice}, </if>
+			<if test="offeringType != null">`offering_type` = #{offeringType}, </if>
+			<if test="instanceCount != null">`instance_count` = #{instanceCount}, </if>
+			<if test="endTime != null">`end_time` = #{endTime}, </if>
+			<if test="isMutizone != null">`is_mutizone` = #{isMutizone}</if>
+		</set>
+		where reserved_desc_id = #{reservedDescId}
+	</update>
+	
+	<delete id="delete">
+		delete from ctd_invoice_detail_reserved where reserved_desc_id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from ctd_invoice_detail_reserved where reserved_desc_id in 
+		<foreach item="reservedDescId" collection="array" open="(" separator="," close=")">
+			#{reservedDescId}
+		</foreach>
+	</delete>
+
+</mapper>

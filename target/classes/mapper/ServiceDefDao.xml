@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ies.ncu.edu.cn.dao.ServiceDefDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="ies.ncu.edu.cn.entity.ServiceDefEntity" id="serviceDefMap">
+        <result property="serviceId" column="SERVICE_ID"/>
+        <result property="cloudId" column="CLOUD_ID"/>
+        <result property="serviceName" column="SERVICE_NAME"/>
+        <result property="status" column="STATUS"/>
+        <result property="priceIntroUrl" column="PRICE_INTRO_URL"/>
+        <result property="orders" column="ORDERS"/>
+        <result property="description" column="DESCRIPTION"/>
+        <result property="dataState" column="DATA_STATE"/>
+        <result property="serviceCode" column="SERVICE_CODE"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="ies.ncu.edu.cn.entity.ServiceDefEntity">
+		select * from ctd_service_def where SERVICE_ID = #{value}
+	</select>
+
+	<select id="queryList" resultType="ies.ncu.edu.cn.entity.ServiceDefEntity">
+		select * from ctd_service_def
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by SERVICE_ID desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from ctd_service_def 
+	</select>
+	 
+	<insert id="save" parameterType="ies.ncu.edu.cn.entity.ServiceDefEntity">
+		insert into ctd_service_def
+		(
+			`SERVICE_ID`, 
+			`CLOUD_ID`, 
+			`SERVICE_NAME`, 
+			`STATUS`, 
+			`PRICE_INTRO_URL`, 
+			`ORDERS`, 
+			`DESCRIPTION`, 
+			`DATA_STATE`, 
+			`SERVICE_CODE`
+		)
+		values
+		(
+			#{serviceId}, 
+			#{cloudId}, 
+			#{serviceName}, 
+			#{status}, 
+			#{priceIntroUrl}, 
+			#{orders}, 
+			#{description}, 
+			#{dataState}, 
+			#{serviceCode}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="ies.ncu.edu.cn.entity.ServiceDefEntity">
+		update ctd_service_def 
+		<set>
+			<if test="cloudId != null">`CLOUD_ID` = #{cloudId}, </if>
+			<if test="serviceName != null">`SERVICE_NAME` = #{serviceName}, </if>
+			<if test="status != null">`STATUS` = #{status}, </if>
+			<if test="priceIntroUrl != null">`PRICE_INTRO_URL` = #{priceIntroUrl}, </if>
+			<if test="orders != null">`ORDERS` = #{orders}, </if>
+			<if test="description != null">`DESCRIPTION` = #{description}, </if>
+			<if test="dataState != null">`DATA_STATE` = #{dataState}, </if>
+			<if test="serviceCode != null">`SERVICE_CODE` = #{serviceCode}</if>
+		</set>
+		where SERVICE_ID = #{serviceId}
+	</update>
+	
+	<delete id="delete">
+		delete from ctd_service_def where SERVICE_ID = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from ctd_service_def where SERVICE_ID in 
+		<foreach item="serviceId" collection="array" open="(" separator="," close=")">
+			#{serviceId}
+		</foreach>
+	</delete>
+
+</mapper>

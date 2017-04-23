@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ies.ncu.edu.cn.dao.AccountLinkaccountDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="ies.ncu.edu.cn.entity.AccountLinkaccountEntity" id="accountLinkaccountMap">
+        <result property="accountLinkId" column="account_link_id"/>
+        <result property="payAccountId" column="pay_account_id"/>
+        <result property="payAccountName" column="pay_account_name"/>
+        <result property="linkAccountId" column="link_account_id"/>
+        <result property="linkAccountName" column="link_account_name"/>
+        <result property="linkAccessKey" column="link_access_key"/>
+        <result property="linkSecretKey" column="link_secret_key"/>
+        <result property="reservedStatus" column="reserved_status"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="ies.ncu.edu.cn.entity.AccountLinkaccountEntity">
+		select * from ctd_account_linkaccount where account_link_id = #{value}
+	</select>
+
+	<select id="queryList" resultType="ies.ncu.edu.cn.entity.AccountLinkaccountEntity">
+		select * from ctd_account_linkaccount
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by account_link_id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from ctd_account_linkaccount 
+	</select>
+	 
+	<insert id="save" parameterType="ies.ncu.edu.cn.entity.AccountLinkaccountEntity">
+		insert into ctd_account_linkaccount
+		(
+			`account_link_id`, 
+			`pay_account_id`, 
+			`pay_account_name`, 
+			`link_account_id`, 
+			`link_account_name`, 
+			`link_access_key`, 
+			`link_secret_key`, 
+			`reserved_status`, 
+			`update_time`
+		)
+		values
+		(
+			#{accountLinkId}, 
+			#{payAccountId}, 
+			#{payAccountName}, 
+			#{linkAccountId}, 
+			#{linkAccountName}, 
+			#{linkAccessKey}, 
+			#{linkSecretKey}, 
+			#{reservedStatus}, 
+			#{updateTime}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="ies.ncu.edu.cn.entity.AccountLinkaccountEntity">
+		update ctd_account_linkaccount 
+		<set>
+			<if test="payAccountId != null">`pay_account_id` = #{payAccountId}, </if>
+			<if test="payAccountName != null">`pay_account_name` = #{payAccountName}, </if>
+			<if test="linkAccountId != null">`link_account_id` = #{linkAccountId}, </if>
+			<if test="linkAccountName != null">`link_account_name` = #{linkAccountName}, </if>
+			<if test="linkAccessKey != null">`link_access_key` = #{linkAccessKey}, </if>
+			<if test="linkSecretKey != null">`link_secret_key` = #{linkSecretKey}, </if>
+			<if test="reservedStatus != null">`reserved_status` = #{reservedStatus}, </if>
+			<if test="updateTime != null">`update_time` = #{updateTime}</if>
+		</set>
+		where account_link_id = #{accountLinkId}
+	</update>
+	
+	<delete id="delete">
+		delete from ctd_account_linkaccount where account_link_id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from ctd_account_linkaccount where account_link_id in 
+		<foreach item="accountLinkId" collection="array" open="(" separator="," close=")">
+			#{accountLinkId}
+		</foreach>
+	</delete>
+
+</mapper>

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>账单数据基本控件表，根据用户，用户绑定的账户，BucketName，时间区间展现不同的数据集合</title>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+<link rel="stylesheet" href="../public/css/bootstrap.min.css">
+<link rel="stylesheet" href="../public/css/font-awesome.min.css">
+<link rel="stylesheet" href="../public/plugins/jqgrid/ui.jqgrid-bootstrap.css">
+<link rel="stylesheet" href="../public/plugins/ztree/css/metroStyle/metroStyle.css">
+<link rel="stylesheet" href="../public/css/main.css">
+<script src="../public/libs/jquery.min.js"></script>
+<script src="../public/plugins/layer/layer.js"></script>
+<script src="../public/libs/bootstrap.min.js"></script>
+<script src="../public/libs/vue.min.js"></script>
+<script src="../public/plugins/jqgrid/grid.locale-cn.js"></script>
+<script src="../public/plugins/jqgrid/jquery.jqGrid.min.js"></script>
+<script src="../public/plugins/ztree/jquery.ztree.all.min.js"></script>
+<script src="../public/js/common.js"></script>
+</head>
+<body>
+<div id="rrapp" v-cloak>
+	<div v-show="showList">
+		<div class="grid-btn">
+			<a v-if="hasPermission('invoicedetailreserved:save')" class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
+			<a v-if="hasPermission('invoicedetailreserved:update')" class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
+			<a v-if="hasPermission('invoicedetailreserved:delete')" class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+		</div>
+	    <table id="jqGrid"></table>
+	    <div id="jqGridPager"></div>
+    </div>
+    
+    <div v-show="!showList" class="panel panel-default">
+		<div class="panel-heading">{{title}}</div>
+		<form class="form-horizontal">
+											<div class="form-group">
+			   	<div class="col-sm-2 control-label">主账户ID</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="invoiceDetailReserved.payerAccountId" placeholder="主账户ID"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">账单月份</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="invoiceDetailReserved.invoiceMonth" placeholder="账单月份"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label"></div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="invoiceDetailReserved.reservedInstanceId" placeholder=""/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">产品类型</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="invoiceDetailReserved.productType" placeholder="产品类型"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">所属区域</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="invoiceDetailReserved.instanceRegion" placeholder="所属区域"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">可用区</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="invoiceDetailReserved.availabilityZone" placeholder="可用区"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">实例类型</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="invoiceDetailReserved.instanceType" placeholder="实例类型"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">平台类型</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="invoiceDetailReserved.plantformType" placeholder="平台类型"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">开始时间</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="invoiceDetailReserved.startTime" placeholder="开始时间"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">预留年份</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="invoiceDetailReserved.durationYear" placeholder="预留年份"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">优惠价格</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="invoiceDetailReserved.offeringPrice" placeholder="优惠价格"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">续价</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="invoiceDetailReserved.rechargePrice" placeholder="续价"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">优惠类型</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="invoiceDetailReserved.offeringType" placeholder="优惠类型"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label"></div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="invoiceDetailReserved.instanceCount" placeholder=""/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">结束时间</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="invoiceDetailReserved.endTime" placeholder="结束时间"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">多区标志</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="invoiceDetailReserved.isMutizone" placeholder="多区标志"/>
+			    </div>
+			</div>
+							<div class="form-group">
+				<div class="col-sm-2 control-label"></div> 
+				<input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>
+				&nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+			</div>
+		</form>
+	</div>
+</div>
+
+<script src="../public/js/ncu/invoicedetailreserved.js"></script>
+</body>
+</html>

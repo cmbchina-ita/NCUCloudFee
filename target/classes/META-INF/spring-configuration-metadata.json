@@ -1,0 +1,11 @@
+{
+  "hints": [],
+  "groups": [
+    {
+      "sourceType": "io.renren.config.FilterConfig",
+      "name": "",
+      "type": "io.renren.config.FilterConfig"
+    }
+  ],
+  "properties": []
+}

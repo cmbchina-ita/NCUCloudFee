@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ies.ncu.edu.cn.dao.InvoiceDetailAdjustFilterDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="ies.ncu.edu.cn.entity.InvoiceDetailAdjustFilterEntity" id="invoiceDetailAdjustFilterMap">
+        <result property="adjustId" column="adjust_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="accountId" column="account_id"/>
+        <result property="bucketName" column="bucket_name"/>
+        <result property="payerAccountId" column="payer_account_id"/>
+        <result property="invoiceMonth" column="invoice_month"/>
+        <result property="adjustResourceId" column="adjust_resource_id"/>
+        <result property="adjustResourceType" column="adjust_resource_type"/>
+        <result property="adjustStartTime" column="adjust_start_time"/>
+        <result property="adjustEndTime" column="adjust_end_time"/>
+        <result property="adjustTag" column="adjust_tag"/>
+        <result property="adjustResvered" column="adjust_resvered"/>
+        <result property="adjustExchangeId" column="adjust_exchange_id"/>
+        <result property="adjustMoney" column="adjust_money"/>
+        <result property="adjustTime" column="adjust_time"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="ies.ncu.edu.cn.entity.InvoiceDetailAdjustFilterEntity">
+		select * from ctd_invoice_detail_adjust_filter where adjust_id = #{value}
+	</select>
+
+	<select id="queryList" resultType="ies.ncu.edu.cn.entity.InvoiceDetailAdjustFilterEntity">
+		select * from ctd_invoice_detail_adjust_filter
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by adjust_id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from ctd_invoice_detail_adjust_filter 
+	</select>
+	 
+	<insert id="save" parameterType="ies.ncu.edu.cn.entity.InvoiceDetailAdjustFilterEntity">
+		insert into ctd_invoice_detail_adjust_filter
+		(
+			`adjust_id`, 
+			`user_id`, 
+			`account_id`, 
+			`bucket_name`, 
+			`payer_account_id`, 
+			`invoice_month`, 
+			`adjust_resource_id`, 
+			`adjust_resource_type`, 
+			`adjust_start_time`, 
+			`adjust_end_time`, 
+			`adjust_tag`, 
+			`adjust_resvered`, 
+			`adjust_exchange_id`, 
+			`adjust_money`, 
+			`adjust_time`
+		)
+		values
+		(
+			#{adjustId}, 
+			#{userId}, 
+			#{accountId}, 
+			#{bucketName}, 
+			#{payerAccountId}, 
+			#{invoiceMonth}, 
+			#{adjustResourceId}, 
+			#{adjustResourceType}, 
+			#{adjustStartTime}, 
+			#{adjustEndTime}, 
+			#{adjustTag}, 
+			#{adjustResvered}, 
+			#{adjustExchangeId}, 
+			#{adjustMoney}, 
+			#{adjustTime}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="ies.ncu.edu.cn.entity.InvoiceDetailAdjustFilterEntity">
+		update ctd_invoice_detail_adjust_filter 
+		<set>
+			<if test="userId != null">`user_id` = #{userId}, </if>
+			<if test="accountId != null">`account_id` = #{accountId}, </if>
+			<if test="bucketName != null">`bucket_name` = #{bucketName}, </if>
+			<if test="payerAccountId != null">`payer_account_id` = #{payerAccountId}, </if>
+			<if test="invoiceMonth != null">`invoice_month` = #{invoiceMonth}, </if>
+			<if test="adjustResourceId != null">`adjust_resource_id` = #{adjustResourceId}, </if>
+			<if test="adjustResourceType != null">`adjust_resource_type` = #{adjustResourceType}, </if>
+			<if test="adjustStartTime != null">`adjust_start_time` = #{adjustStartTime}, </if>
+			<if test="adjustEndTime != null">`adjust_end_time` = #{adjustEndTime}, </if>
+			<if test="adjustTag != null">`adjust_tag` = #{adjustTag}, </if>
+			<if test="adjustResvered != null">`adjust_resvered` = #{adjustResvered}, </if>
+			<if test="adjustExchangeId != null">`adjust_exchange_id` = #{adjustExchangeId}, </if>
+			<if test="adjustMoney != null">`adjust_money` = #{adjustMoney}, </if>
+			<if test="adjustTime != null">`adjust_time` = #{adjustTime}</if>
+		</set>
+		where adjust_id = #{adjustId}
+	</update>
+	
+	<delete id="delete">
+		delete from ctd_invoice_detail_adjust_filter where adjust_id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from ctd_invoice_detail_adjust_filter where adjust_id in 
+		<foreach item="adjustId" collection="array" open="(" separator="," close=")">
+			#{adjustId}
+		</foreach>
+	</delete>
+
+</mapper>

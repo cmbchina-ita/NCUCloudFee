@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ies.ncu.edu.cn.dao.DownloadInvoiceLogDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="ies.ncu.edu.cn.entity.DownloadInvoiceLogEntity" id="downloadInvoiceLogMap">
+        <result property="logId" column="LOG_ID"/>
+        <result property="accountId" column="ACCOUNT_ID"/>
+        <result property="userId" column="USER_ID"/>
+        <result property="requestType" column="REQUEST_TYPE"/>
+        <result property="synId" column="syn_id"/>
+        <result property="syncMonth" column="SYNC_MONTH"/>
+        <result property="requestContent" column="REQUEST_CONTENT"/>
+        <result property="dealFlag" column="DEAL_FLAG"/>
+        <result property="syncTime" column="SYNC_TIME"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="ies.ncu.edu.cn.entity.DownloadInvoiceLogEntity">
+		select * from ctd_download_invoice_log where LOG_ID = #{value}
+	</select>
+
+	<select id="queryList" resultType="ies.ncu.edu.cn.entity.DownloadInvoiceLogEntity">
+		select * from ctd_download_invoice_log
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by LOG_ID desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from ctd_download_invoice_log 
+	</select>
+	 
+	<insert id="save" parameterType="ies.ncu.edu.cn.entity.DownloadInvoiceLogEntity">
+		insert into ctd_download_invoice_log
+		(
+			`LOG_ID`, 
+			`ACCOUNT_ID`, 
+			`USER_ID`, 
+			`REQUEST_TYPE`, 
+			`syn_id`, 
+			`SYNC_MONTH`, 
+			`REQUEST_CONTENT`, 
+			`DEAL_FLAG`, 
+			`SYNC_TIME`
+		)
+		values
+		(
+			#{logId}, 
+			#{accountId}, 
+			#{userId}, 
+			#{requestType}, 
+			#{synId}, 
+			#{syncMonth}, 
+			#{requestContent}, 
+			#{dealFlag}, 
+			#{syncTime}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="ies.ncu.edu.cn.entity.DownloadInvoiceLogEntity">
+		update ctd_download_invoice_log 
+		<set>
+			<if test="accountId != null">`ACCOUNT_ID` = #{accountId}, </if>
+			<if test="userId != null">`USER_ID` = #{userId}, </if>
+			<if test="requestType != null">`REQUEST_TYPE` = #{requestType}, </if>
+			<if test="synId != null">`syn_id` = #{synId}, </if>
+			<if test="syncMonth != null">`SYNC_MONTH` = #{syncMonth}, </if>
+			<if test="requestContent != null">`REQUEST_CONTENT` = #{requestContent}, </if>
+			<if test="dealFlag != null">`DEAL_FLAG` = #{dealFlag}, </if>
+			<if test="syncTime != null">`SYNC_TIME` = #{syncTime}</if>
+		</set>
+		where LOG_ID = #{logId}
+	</update>
+	
+	<delete id="delete">
+		delete from ctd_download_invoice_log where LOG_ID = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from ctd_download_invoice_log where LOG_ID in 
+		<foreach item="logId" collection="array" open="(" separator="," close=")">
+			#{logId}
+		</foreach>
+	</delete>
+
+</mapper>

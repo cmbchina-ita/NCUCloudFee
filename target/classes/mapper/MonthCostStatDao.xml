@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ies.ncu.edu.cn.dao.MonthCostStatDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="ies.ncu.edu.cn.entity.MonthCostStatEntity" id="monthCostStatMap">
+        <result property="statId" column="STAT_ID"/>
+        <result property="payAccountId" column="PAY_ACCOUNT_ID"/>
+        <result property="cloudId" column="CLOUD_ID"/>
+        <result property="statMonth" column="STAT_MONTH"/>
+        <result property="thisMonthCost" column="THIS_MONTH_COST"/>
+        <result property="thisMonthExpectCost" column="THIS_MONTH_EXPECT_COST"/>
+        <result property="lastMonthCost" column="LAST_MONTH_COST"/>
+        <result property="averageCost3" column="AVERAGE_COST_3"/>
+        <result property="dataState" column="DATA_STATE"/>
+        <result property="linkedAccountId" column="LINKED_ACCOUNT_ID"/>
+        <result property="monthDeductedCost" column="MONTH_DEDUCTED_COST"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="ies.ncu.edu.cn.entity.MonthCostStatEntity">
+		select * from ctd_month_cost_stat where STAT_ID = #{value}
+	</select>
+
+	<select id="queryList" resultType="ies.ncu.edu.cn.entity.MonthCostStatEntity">
+		select * from ctd_month_cost_stat
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by STAT_ID desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from ctd_month_cost_stat 
+	</select>
+	 
+	<insert id="save" parameterType="ies.ncu.edu.cn.entity.MonthCostStatEntity">
+		insert into ctd_month_cost_stat
+		(
+			`STAT_ID`, 
+			`PAY_ACCOUNT_ID`, 
+			`CLOUD_ID`, 
+			`STAT_MONTH`, 
+			`THIS_MONTH_COST`, 
+			`THIS_MONTH_EXPECT_COST`, 
+			`LAST_MONTH_COST`, 
+			`AVERAGE_COST_3`, 
+			`DATA_STATE`, 
+			`LINKED_ACCOUNT_ID`, 
+			`MONTH_DEDUCTED_COST`
+		)
+		values
+		(
+			#{statId}, 
+			#{payAccountId}, 
+			#{cloudId}, 
+			#{statMonth}, 
+			#{thisMonthCost}, 
+			#{thisMonthExpectCost}, 
+			#{lastMonthCost}, 
+			#{averageCost3}, 
+			#{dataState}, 
+			#{linkedAccountId}, 
+			#{monthDeductedCost}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="ies.ncu.edu.cn.entity.MonthCostStatEntity">
+		update ctd_month_cost_stat 
+		<set>
+			<if test="payAccountId != null">`PAY_ACCOUNT_ID` = #{payAccountId}, </if>
+			<if test="cloudId != null">`CLOUD_ID` = #{cloudId}, </if>
+			<if test="statMonth != null">`STAT_MONTH` = #{statMonth}, </if>
+			<if test="thisMonthCost != null">`THIS_MONTH_COST` = #{thisMonthCost}, </if>
+			<if test="thisMonthExpectCost != null">`THIS_MONTH_EXPECT_COST` = #{thisMonthExpectCost}, </if>
+			<if test="lastMonthCost != null">`LAST_MONTH_COST` = #{lastMonthCost}, </if>
+			<if test="averageCost3 != null">`AVERAGE_COST_3` = #{averageCost3}, </if>
+			<if test="dataState != null">`DATA_STATE` = #{dataState}, </if>
+			<if test="linkedAccountId != null">`LINKED_ACCOUNT_ID` = #{linkedAccountId}, </if>
+			<if test="monthDeductedCost != null">`MONTH_DEDUCTED_COST` = #{monthDeductedCost}</if>
+		</set>
+		where STAT_ID = #{statId}
+	</update>
+	
+	<delete id="delete">
+		delete from ctd_month_cost_stat where STAT_ID = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from ctd_month_cost_stat where STAT_ID in 
+		<foreach item="statId" collection="array" open="(" separator="," close=")">
+			#{statId}
+		</foreach>
+	</delete>
+
+</mapper>

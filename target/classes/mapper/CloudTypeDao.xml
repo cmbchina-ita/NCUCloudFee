@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ies.ncu.edu.cn.dao.CloudTypeDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="ies.ncu.edu.cn.entity.CloudTypeEntity" id="cloudTypeMap">
+        <result property="cloudId" column="CLOUD_ID"/>
+        <result property="cloudName" column="CLOUD_NAME"/>
+        <result property="status" column="STATUS"/>
+        <result property="url" column="URL"/>
+        <result property="orders" column="ORDERS"/>
+        <result property="description" column="DESCRIPTION"/>
+        <result property="dataState" column="DATA_STATE"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="ies.ncu.edu.cn.entity.CloudTypeEntity">
+		select * from ctd_cloud_type where CLOUD_ID = #{value}
+	</select>
+
+	<select id="queryList" resultType="ies.ncu.edu.cn.entity.CloudTypeEntity">
+		select * from ctd_cloud_type
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by CLOUD_ID desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from ctd_cloud_type 
+	</select>
+	 
+	<insert id="save" parameterType="ies.ncu.edu.cn.entity.CloudTypeEntity">
+		insert into ctd_cloud_type
+		(
+			`CLOUD_ID`, 
+			`CLOUD_NAME`, 
+			`STATUS`, 
+			`URL`, 
+			`ORDERS`, 
+			`DESCRIPTION`, 
+			`DATA_STATE`
+		)
+		values
+		(
+			#{cloudId}, 
+			#{cloudName}, 
+			#{status}, 
+			#{url}, 
+			#{orders}, 
+			#{description}, 
+			#{dataState}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="ies.ncu.edu.cn.entity.CloudTypeEntity">
+		update ctd_cloud_type 
+		<set>
+			<if test="cloudName != null">`CLOUD_NAME` = #{cloudName}, </if>
+			<if test="status != null">`STATUS` = #{status}, </if>
+			<if test="url != null">`URL` = #{url}, </if>
+			<if test="orders != null">`ORDERS` = #{orders}, </if>
+			<if test="description != null">`DESCRIPTION` = #{description}, </if>
+			<if test="dataState != null">`DATA_STATE` = #{dataState}</if>
+		</set>
+		where CLOUD_ID = #{cloudId}
+	</update>
+	
+	<delete id="delete">
+		delete from ctd_cloud_type where CLOUD_ID = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from ctd_cloud_type where CLOUD_ID in 
+		<foreach item="cloudId" collection="array" open="(" separator="," close=")">
+			#{cloudId}
+		</foreach>
+	</delete>
+
+</mapper>

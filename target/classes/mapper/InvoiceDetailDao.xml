@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ies.ncu.edu.cn.dao.InvoiceDetailDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="ies.ncu.edu.cn.entity.InvoiceDetailEntity" id="invoiceDetailMap">
+        <result property="invoiceId" column="invoice_id"/>
+        <result property="payerAccountId" column="payer_account_id"/>
+        <result property="linkedAccountId" column="linked_account_id"/>
+        <result property="recordType" column="record_type"/>
+        <result property="invoiceDay" column="invoice_day"/>
+        <result property="subscriptionId" column="subscription_id"/>
+        <result property="productName" column="product_name"/>
+        <result property="usageType" column="usage_type"/>
+        <result property="operation" column="operation"/>
+        <result property="reservedInstance" column="reserved_instance"/>
+        <result property="itemDescription" column="item_description"/>
+        <result property="tagName" column="tag_name"/>
+        <result property="tagValue" column="tag_value"/>
+        <result property="taxAmount" column="tax_amount"/>
+        <result property="totalCost" column="total_cost"/>
+        <result property="resourceId" column="resource_id"/>
+        <result property="usageQuantity" column="usage_quantity"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="az" column="AZ"/>
+        <result property="platform" column="platform"/>
+        <result property="riId" column="ri_id"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="ies.ncu.edu.cn.entity.InvoiceDetailEntity">
+		select * from ctd_invoice_detail where invoice_id = #{value}
+	</select>
+
+	<select id="queryList" resultType="ies.ncu.edu.cn.entity.InvoiceDetailEntity">
+		select * from ctd_invoice_detail
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by invoice_id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from ctd_invoice_detail 
+	</select>
+	 
+	<insert id="save" parameterType="ies.ncu.edu.cn.entity.InvoiceDetailEntity" useGeneratedKeys="true" keyProperty="invoiceId">
+		insert into ctd_invoice_detail
+		(
+			`payer_account_id`, 
+			`linked_account_id`, 
+			`record_type`, 
+			`invoice_day`, 
+			`subscription_id`, 
+			`product_name`, 
+			`usage_type`, 
+			`operation`, 
+			`reserved_instance`, 
+			`item_description`, 
+			`tag_name`, 
+			`tag_value`, 
+			`tax_amount`, 
+			`total_cost`, 
+			`resource_id`, 
+			`usage_quantity`, 
+			`update_time`, 
+			`AZ`, 
+			`platform`, 
+			`ri_id`
+		)
+		values
+		(
+			#{payerAccountId}, 
+			#{linkedAccountId}, 
+			#{recordType}, 
+			#{invoiceDay}, 
+			#{subscriptionId}, 
+			#{productName}, 
+			#{usageType}, 
+			#{operation}, 
+			#{reservedInstance}, 
+			#{itemDescription}, 
+			#{tagName}, 
+			#{tagValue}, 
+			#{taxAmount}, 
+			#{totalCost}, 
+			#{resourceId}, 
+			#{usageQuantity}, 
+			#{updateTime}, 
+			#{az}, 
+			#{platform}, 
+			#{riId}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="ies.ncu.edu.cn.entity.InvoiceDetailEntity">
+		update ctd_invoice_detail 
+		<set>
+			<if test="payerAccountId != null">`payer_account_id` = #{payerAccountId}, </if>
+			<if test="linkedAccountId != null">`linked_account_id` = #{linkedAccountId}, </if>
+			<if test="recordType != null">`record_type` = #{recordType}, </if>
+			<if test="invoiceDay != null">`invoice_day` = #{invoiceDay}, </if>
+			<if test="subscriptionId != null">`subscription_id` = #{subscriptionId}, </if>
+			<if test="productName != null">`product_name` = #{productName}, </if>
+			<if test="usageType != null">`usage_type` = #{usageType}, </if>
+			<if test="operation != null">`operation` = #{operation}, </if>
+			<if test="reservedInstance != null">`reserved_instance` = #{reservedInstance}, </if>
+			<if test="itemDescription != null">`item_description` = #{itemDescription}, </if>
+			<if test="tagName != null">`tag_name` = #{tagName}, </if>
+			<if test="tagValue != null">`tag_value` = #{tagValue}, </if>
+			<if test="taxAmount != null">`tax_amount` = #{taxAmount}, </if>
+			<if test="totalCost != null">`total_cost` = #{totalCost}, </if>
+			<if test="resourceId != null">`resource_id` = #{resourceId}, </if>
+			<if test="usageQuantity != null">`usage_quantity` = #{usageQuantity}, </if>
+			<if test="updateTime != null">`update_time` = #{updateTime}, </if>
+			<if test="az != null">`AZ` = #{az}, </if>
+			<if test="platform != null">`platform` = #{platform}, </if>
+			<if test="riId != null">`ri_id` = #{riId}</if>
+		</set>
+		where invoice_id = #{invoiceId}
+	</update>
+	
+	<delete id="delete">
+		delete from ctd_invoice_detail where invoice_id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from ctd_invoice_detail where invoice_id in 
+		<foreach item="invoiceId" collection="array" open="(" separator="," close=")">
+			#{invoiceId}
+		</foreach>
+	</delete>
+
+</mapper>

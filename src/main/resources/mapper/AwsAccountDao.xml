@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ies.ncu.edu.cn.dao.AwsAccountDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="ies.ncu.edu.cn.entity.AwsAccountEntity" id="awsAccountMap">
+        <result property="accountId" column="ACCOUNT_ID"/>
+        <result property="region" column="region"/>
+        <result property="awsUserId" column="aws_user_id"/>
+        <result property="accessKeyId" column="access_key_id"/>
+        <result property="secretKey" column="secret_key"/>
+        <result property="bucketName" column="bucket_name"/>
+        <result property="awsArn" column="aws_arn"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="ies.ncu.edu.cn.entity.AwsAccountEntity">
+		select * from ctd_aws_account where ACCOUNT_ID = #{value}
+	</select>
+
+	<select id="queryList" resultType="ies.ncu.edu.cn.entity.AwsAccountEntity">
+		select * from ctd_aws_account
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by ACCOUNT_ID desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from ctd_aws_account 
+	</select>
+	 
+	<insert id="save" parameterType="ies.ncu.edu.cn.entity.AwsAccountEntity">
+		insert into ctd_aws_account
+		(
+			`ACCOUNT_ID`, 
+			`region`, 
+			`aws_user_id`, 
+			`access_key_id`, 
+			`secret_key`, 
+			`bucket_name`, 
+			`aws_arn`
+		)
+		values
+		(
+			#{accountId}, 
+			#{region}, 
+			#{awsUserId}, 
+			#{accessKeyId}, 
+			#{secretKey}, 
+			#{bucketName}, 
+			#{awsArn}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="ies.ncu.edu.cn.entity.AwsAccountEntity">
+		update ctd_aws_account 
+		<set>
+			<if test="region != null">`region` = #{region}, </if>
+			<if test="awsUserId != null">`aws_user_id` = #{awsUserId}, </if>
+			<if test="accessKeyId != null">`access_key_id` = #{accessKeyId}, </if>
+			<if test="secretKey != null">`secret_key` = #{secretKey}, </if>
+			<if test="bucketName != null">`bucket_name` = #{bucketName}, </if>
+			<if test="awsArn != null">`aws_arn` = #{awsArn}</if>
+		</set>
+		where ACCOUNT_ID = #{accountId}
+	</update>
+	
+	<delete id="delete">
+		delete from ctd_aws_account where ACCOUNT_ID = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from ctd_aws_account where ACCOUNT_ID in 
+		<foreach item="accountId" collection="array" open="(" separator="," close=")">
+			#{accountId}
+		</foreach>
+	</delete>
+
+</mapper>

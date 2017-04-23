@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ies.ncu.edu.cn.dao.InvoiceAccountDescDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="ies.ncu.edu.cn.entity.InvoiceAccountDescEntity" id="invoiceAccountDescMap">
+        <result property="invoiceAccountId" column="invoice_account_id"/>
+        <result property="awsAccountId" column="aws_account_id"/>
+        <result property="awsAccountName" column="aws_account_name"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="totalCost" column="total_cost"/>
+        <result property="payerAccountId" column="payer_account_id"/>
+        <result property="month" column="month"/>
+        <result property="supportCost" column="support_cost"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="ies.ncu.edu.cn.entity.InvoiceAccountDescEntity">
+		select * from ctd_invoice_account_desc where invoice_account_id = #{value}
+	</select>
+
+	<select id="queryList" resultType="ies.ncu.edu.cn.entity.InvoiceAccountDescEntity">
+		select * from ctd_invoice_account_desc
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by invoice_account_id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from ctd_invoice_account_desc 
+	</select>
+	 
+	<insert id="save" parameterType="ies.ncu.edu.cn.entity.InvoiceAccountDescEntity">
+		insert into ctd_invoice_account_desc
+		(
+			`invoice_account_id`, 
+			`aws_account_id`, 
+			`aws_account_name`, 
+			`update_time`, 
+			`total_cost`, 
+			`payer_account_id`, 
+			`month`, 
+			`support_cost`
+		)
+		values
+		(
+			#{invoiceAccountId}, 
+			#{awsAccountId}, 
+			#{awsAccountName}, 
+			#{updateTime}, 
+			#{totalCost}, 
+			#{payerAccountId}, 
+			#{month}, 
+			#{supportCost}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="ies.ncu.edu.cn.entity.InvoiceAccountDescEntity">
+		update ctd_invoice_account_desc 
+		<set>
+			<if test="awsAccountId != null">`aws_account_id` = #{awsAccountId}, </if>
+			<if test="awsAccountName != null">`aws_account_name` = #{awsAccountName}, </if>
+			<if test="updateTime != null">`update_time` = #{updateTime}, </if>
+			<if test="totalCost != null">`total_cost` = #{totalCost}, </if>
+			<if test="payerAccountId != null">`payer_account_id` = #{payerAccountId}, </if>
+			<if test="month != null">`month` = #{month}, </if>
+			<if test="supportCost != null">`support_cost` = #{supportCost}</if>
+		</set>
+		where invoice_account_id = #{invoiceAccountId}
+	</update>
+	
+	<delete id="delete">
+		delete from ctd_invoice_account_desc where invoice_account_id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from ctd_invoice_account_desc where invoice_account_id in 
+		<foreach item="invoiceAccountId" collection="array" open="(" separator="," close=")">
+			#{invoiceAccountId}
+		</foreach>
+	</delete>
+
+</mapper>

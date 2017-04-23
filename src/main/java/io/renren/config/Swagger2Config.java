@@ -27,10 +27,10 @@ public class Swagger2Config {
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("renren-security-boot使用Swagger2构建RESTful API")
-                .description("人人编程：http://www.renren.io")
-                .termsOfServiceUrl("http://www.renren.io")
-                .contact("人人开源")
+                .title("NCU-cloudfee-boot使用Swagger2构建RESTful API")
+                .description("南昌大学信息工程学院：http://ies.ncu.edu.cn")
+                .termsOfServiceUrl("http://ies.ncu.edu.cn")
+                .contact("云费用管理系统")
                 .version("2.0")
                 .build();
     }

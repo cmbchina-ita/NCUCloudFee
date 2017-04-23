@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ies.ncu.edu.cn.dao.CostTagDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="ies.ncu.edu.cn.entity.CostTagEntity" id="costTagMap">
+        <result property="tagId" column="TAG_ID"/>
+        <result property="payAccountId" column="PAY_ACCOUNT_ID"/>
+        <result property="cloudId" column="CLOUD_ID"/>
+        <result property="tagName" column="TAG_NAME"/>
+        <result property="tagValue" column="TAG_VALUE"/>
+        <result property="tagOrder" column="TAG_ORDER"/>
+        <result property="dataState" column="DATA_STATE"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="ies.ncu.edu.cn.entity.CostTagEntity">
+		select * from ctd_cost_tag where TAG_ID = #{value}
+	</select>
+
+	<select id="queryList" resultType="ies.ncu.edu.cn.entity.CostTagEntity">
+		select * from ctd_cost_tag
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by TAG_ID desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from ctd_cost_tag 
+	</select>
+	 
+	<insert id="save" parameterType="ies.ncu.edu.cn.entity.CostTagEntity">
+		insert into ctd_cost_tag
+		(
+			`TAG_ID`, 
+			`PAY_ACCOUNT_ID`, 
+			`CLOUD_ID`, 
+			`TAG_NAME`, 
+			`TAG_VALUE`, 
+			`TAG_ORDER`, 
+			`DATA_STATE`
+		)
+		values
+		(
+			#{tagId}, 
+			#{payAccountId}, 
+			#{cloudId}, 
+			#{tagName}, 
+			#{tagValue}, 
+			#{tagOrder}, 
+			#{dataState}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="ies.ncu.edu.cn.entity.CostTagEntity">
+		update ctd_cost_tag 
+		<set>
+			<if test="payAccountId != null">`PAY_ACCOUNT_ID` = #{payAccountId}, </if>
+			<if test="cloudId != null">`CLOUD_ID` = #{cloudId}, </if>
+			<if test="tagName != null">`TAG_NAME` = #{tagName}, </if>
+			<if test="tagValue != null">`TAG_VALUE` = #{tagValue}, </if>
+			<if test="tagOrder != null">`TAG_ORDER` = #{tagOrder}, </if>
+			<if test="dataState != null">`DATA_STATE` = #{dataState}</if>
+		</set>
+		where TAG_ID = #{tagId}
+	</update>
+	
+	<delete id="delete">
+		delete from ctd_cost_tag where TAG_ID = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from ctd_cost_tag where TAG_ID in 
+		<foreach item="tagId" collection="array" open="(" separator="," close=")">
+			#{tagId}
+		</foreach>
+	</delete>
+
+</mapper>

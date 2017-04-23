@@ -195,12 +195,12 @@ public class GenUtils {
 
 		if(template.contains("list.html.vm")){
 			return "main" + File.separator + "resources" + File.separator + "static" + File.separator
-					+ "generator" + File.separator + className.toLowerCase() + ".html";
+					+ "ncu" + File.separator + className.toLowerCase() + ".html";
 		}
 		
 		if(template.contains("list.js.vm")){
-			return "main" + File.separator + "resources" + File.separator + "static" + File.separator + "pulbic" + File.separator
-					+ "js" + File.separator + "generator" + File.separator + className.toLowerCase() + ".js";
+			return "main" + File.separator + "resources" + File.separator + "static" + File.separator + "public" + File.separator
+					+ "js" + File.separator + "ncu" + File.separator + className.toLowerCase() + ".js";
 		}
 
 		if(template.contains("menu.sql.vm")){

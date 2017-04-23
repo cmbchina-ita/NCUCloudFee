@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ies.ncu.edu.cn.dao.InvoiceDetailAdjustResultDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="ies.ncu.edu.cn.entity.InvoiceDetailAdjustResultEntity" id="invoiceDetailAdjustResultMap">
+        <result property="adjustId" column="adjust_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="accountId" column="account_id"/>
+        <result property="bucketName" column="bucket_name"/>
+        <result property="payerAccountId" column="payer_account_id"/>
+        <result property="invoiceMonth" column="invoice_month"/>
+        <result property="adjustResult" column="adjust_result"/>
+        <result property="adjustTime" column="adjust_time"/>
+        <result property="adjustTitle" column="adjust_title"/>
+        <result property="billTime" column="bill_time"/>
+        <result property="tagName" column="tag_name"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="ies.ncu.edu.cn.entity.InvoiceDetailAdjustResultEntity">
+		select * from ctd_invoice_detail_adjust_result where adjust_id = #{value}
+	</select>
+
+	<select id="queryList" resultType="ies.ncu.edu.cn.entity.InvoiceDetailAdjustResultEntity">
+		select * from ctd_invoice_detail_adjust_result
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by adjust_id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from ctd_invoice_detail_adjust_result 
+	</select>
+	 
+	<insert id="save" parameterType="ies.ncu.edu.cn.entity.InvoiceDetailAdjustResultEntity">
+		insert into ctd_invoice_detail_adjust_result
+		(
+			`adjust_id`, 
+			`user_id`, 
+			`account_id`, 
+			`bucket_name`, 
+			`payer_account_id`, 
+			`invoice_month`, 
+			`adjust_result`, 
+			`adjust_time`, 
+			`adjust_title`, 
+			`bill_time`, 
+			`tag_name`
+		)
+		values
+		(
+			#{adjustId}, 
+			#{userId}, 
+			#{accountId}, 
+			#{bucketName}, 
+			#{payerAccountId}, 
+			#{invoiceMonth}, 
+			#{adjustResult}, 
+			#{adjustTime}, 
+			#{adjustTitle}, 
+			#{billTime}, 
+			#{tagName}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="ies.ncu.edu.cn.entity.InvoiceDetailAdjustResultEntity">
+		update ctd_invoice_detail_adjust_result 
+		<set>
+			<if test="userId != null">`user_id` = #{userId}, </if>
+			<if test="accountId != null">`account_id` = #{accountId}, </if>
+			<if test="bucketName != null">`bucket_name` = #{bucketName}, </if>
+			<if test="payerAccountId != null">`payer_account_id` = #{payerAccountId}, </if>
+			<if test="invoiceMonth != null">`invoice_month` = #{invoiceMonth}, </if>
+			<if test="adjustResult != null">`adjust_result` = #{adjustResult}, </if>
+			<if test="adjustTime != null">`adjust_time` = #{adjustTime}, </if>
+			<if test="adjustTitle != null">`adjust_title` = #{adjustTitle}, </if>
+			<if test="billTime != null">`bill_time` = #{billTime}, </if>
+			<if test="tagName != null">`tag_name` = #{tagName}</if>
+		</set>
+		where adjust_id = #{adjustId}
+	</update>
+	
+	<delete id="delete">
+		delete from ctd_invoice_detail_adjust_result where adjust_id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from ctd_invoice_detail_adjust_result where adjust_id in 
+		<foreach item="adjustId" collection="array" open="(" separator="," close=")">
+			#{adjustId}
+		</foreach>
+	</delete>
+
+</mapper>

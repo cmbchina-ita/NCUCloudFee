@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ies.ncu.edu.cn.dao.TagDayCostStatDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="ies.ncu.edu.cn.entity.TagDayCostStatEntity" id="tagDayCostStatMap">
+        <result property="statId" column="STAT_ID"/>
+        <result property="payAccountId" column="PAY_ACCOUNT_ID"/>
+        <result property="cloudId" column="CLOUD_ID"/>
+        <result property="statDate" column="STAT_DATE"/>
+        <result property="tagName" column="TAG_NAME"/>
+        <result property="tagValue" column="TAG_VALUE"/>
+        <result property="dayCost" column="DAY_COST"/>
+        <result property="dataState" column="DATA_STATE"/>
+        <result property="linkedAccountId" column="LINKED_ACCOUNT_ID"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="ies.ncu.edu.cn.entity.TagDayCostStatEntity">
+		select * from ctd_tag_day_cost_stat where STAT_ID = #{value}
+	</select>
+
+	<select id="queryList" resultType="ies.ncu.edu.cn.entity.TagDayCostStatEntity">
+		select * from ctd_tag_day_cost_stat
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by STAT_ID desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from ctd_tag_day_cost_stat 
+	</select>
+	 
+	<insert id="save" parameterType="ies.ncu.edu.cn.entity.TagDayCostStatEntity">
+		insert into ctd_tag_day_cost_stat
+		(
+			`STAT_ID`, 
+			`PAY_ACCOUNT_ID`, 
+			`CLOUD_ID`, 
+			`STAT_DATE`, 
+			`TAG_NAME`, 
+			`TAG_VALUE`, 
+			`DAY_COST`, 
+			`DATA_STATE`, 
+			`LINKED_ACCOUNT_ID`
+		)
+		values
+		(
+			#{statId}, 
+			#{payAccountId}, 
+			#{cloudId}, 
+			#{statDate}, 
+			#{tagName}, 
+			#{tagValue}, 
+			#{dayCost}, 
+			#{dataState}, 
+			#{linkedAccountId}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="ies.ncu.edu.cn.entity.TagDayCostStatEntity">
+		update ctd_tag_day_cost_stat 
+		<set>
+			<if test="payAccountId != null">`PAY_ACCOUNT_ID` = #{payAccountId}, </if>
+			<if test="cloudId != null">`CLOUD_ID` = #{cloudId}, </if>
+			<if test="statDate != null">`STAT_DATE` = #{statDate}, </if>
+			<if test="tagName != null">`TAG_NAME` = #{tagName}, </if>
+			<if test="tagValue != null">`TAG_VALUE` = #{tagValue}, </if>
+			<if test="dayCost != null">`DAY_COST` = #{dayCost}, </if>
+			<if test="dataState != null">`DATA_STATE` = #{dataState}, </if>
+			<if test="linkedAccountId != null">`LINKED_ACCOUNT_ID` = #{linkedAccountId}</if>
+		</set>
+		where STAT_ID = #{statId}
+	</update>
+	
+	<delete id="delete">
+		delete from ctd_tag_day_cost_stat where STAT_ID = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from ctd_tag_day_cost_stat where STAT_ID in 
+		<foreach item="statId" collection="array" open="(" separator="," close=")">
+			#{statId}
+		</foreach>
+	</delete>
+
+</mapper>

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ies.ncu.edu.cn.dao.AccountDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="ies.ncu.edu.cn.entity.AccountEntity" id="accountMap">
+        <result property="accountId" column="ACCOUNT_ID"/>
+        <result property="cloudId" column="CLOUD_ID"/>
+        <result property="name" column="name"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="operateUserId" column="OPERATE_USER_ID"/>
+        <result property="validate" column="validate"/>
+        <result property="rootAccountId" column="root_account_id"/>
+        <result property="rootAccountName" column="root_account_name"/>
+        <result property="cloudType" column="cloud_type"/>
+        <result property="isAssumeRole" column="is_assume_role"/>
+        <result property="lastMonthInvoiceSize" column="last_month_invoice_size"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="ies.ncu.edu.cn.entity.AccountEntity">
+		select * from ctd_account where ACCOUNT_ID = #{value}
+	</select>
+
+	<select id="queryList" resultType="ies.ncu.edu.cn.entity.AccountEntity">
+		select * from ctd_account
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by ACCOUNT_ID desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from ctd_account 
+	</select>
+	 
+	<insert id="save" parameterType="ies.ncu.edu.cn.entity.AccountEntity">
+		insert into ctd_account
+		(
+			`ACCOUNT_ID`, 
+			`CLOUD_ID`, 
+			`name`, 
+			`update_time`, 
+			`OPERATE_USER_ID`, 
+			`validate`, 
+			`root_account_id`, 
+			`root_account_name`, 
+			`cloud_type`, 
+			`is_assume_role`, 
+			`last_month_invoice_size`, 
+			`create_time`
+		)
+		values
+		(
+			#{accountId}, 
+			#{cloudId}, 
+			#{name}, 
+			#{updateTime}, 
+			#{operateUserId}, 
+			#{validate}, 
+			#{rootAccountId}, 
+			#{rootAccountName}, 
+			#{cloudType}, 
+			#{isAssumeRole}, 
+			#{lastMonthInvoiceSize}, 
+			#{createTime}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="ies.ncu.edu.cn.entity.AccountEntity">
+		update ctd_account 
+		<set>
+			<if test="cloudId != null">`CLOUD_ID` = #{cloudId}, </if>
+			<if test="name != null">`name` = #{name}, </if>
+			<if test="updateTime != null">`update_time` = #{updateTime}, </if>
+			<if test="operateUserId != null">`OPERATE_USER_ID` = #{operateUserId}, </if>
+			<if test="validate != null">`validate` = #{validate}, </if>
+			<if test="rootAccountId != null">`root_account_id` = #{rootAccountId}, </if>
+			<if test="rootAccountName != null">`root_account_name` = #{rootAccountName}, </if>
+			<if test="cloudType != null">`cloud_type` = #{cloudType}, </if>
+			<if test="isAssumeRole != null">`is_assume_role` = #{isAssumeRole}, </if>
+			<if test="lastMonthInvoiceSize != null">`last_month_invoice_size` = #{lastMonthInvoiceSize}, </if>
+			<if test="createTime != null">`create_time` = #{createTime}</if>
+		</set>
+		where ACCOUNT_ID = #{accountId}
+	</update>
+	
+	<delete id="delete">
+		delete from ctd_account where ACCOUNT_ID = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from ctd_account where ACCOUNT_ID in 
+		<foreach item="accountId" collection="array" open="(" separator="," close=")">
+			#{accountId}
+		</foreach>
+	</delete>
+
+</mapper>

@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Implementation-Title: renren-security-boot
+Implementation-Version: 1.0.0
+Built-By: rechen
+Implementation-Vendor-Id: io.renren
+Build-Jdk: 1.8.0_121
+Implementation-URL: http://projects.spring.io/spring-boot/renren-secur
+ ity-boot/
+Created-By: Maven Integration for Eclipse
+Implementation-Vendor: Pivotal Software, Inc.
+
